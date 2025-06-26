@@ -1,103 +1,132 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import { useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import {
+    Briefcase,
+    Users,
+    MessageCircleWarning,
+    Star,
+    Search,
+    Building2,
+    Sparkles,
+    Clock,
+} from "lucide-react"
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+
+
+export default function landing() {
+
+    return (
+        <main className="relative h-[100dvh] w-[100vw] overflow-hidden text-white">
+            {/* Camada branca translúcida SEM apagar o fundo */}
+            <div className="absolute inset-0 z-10 bg-black/10 pointer-events-none" />
+
+            {/* Conteúdo central */}
+            <div className="relative z-10 h-full w-full flex items-center justify-center px-4">
+                <div className="relative z-10 h-full w-full flex items-center justify-center px-4 py-12">
+                    {/* Container principal */}
+                    <div className="backdrop-blur-xl bg-white/90 border border-white/40 shadow-xl rounded-2xl p-8 max-w-md w-full text-center space-y-8 text-gray-900">
+                        <div className="inline-flex self-start shadow-lg">
+                            {/* Bloco SOS com gradiente e sombra simulando borda */}
+                            <div
+                                className="flex items-center px-4 skew-x-[-12deg] rounded-l-md bg-gradient-to-br from-emerald-400 to-emerald-200 shadow-[0_0_0_1.5px_#34D399] border-r-0">
+                                <span className="text-white font-bold text-2xl skew-x-[12deg]">S</span>
+                                <MessageCircleWarning className="w-6 h-6 text-white skew-x-[12deg]" strokeWidth={2.5} />
+                                <span className="text-white font-bold text-2xl skew-x-[12deg]">S</span>
+                            </div>
+
+                            {/* Bloco taxas com fundo sólido e mesma sombra lateral */}
+                            <div
+                                className="flex items-center bg-gray-900 px-4 skew-x-[-12deg] rounded-r-md shadow-[0_0_0_1.5px_#34D399] border-l-0">
+                                <span className="text-white font-bold text-2xl skew-x-[12deg] leading-6">TAXAS</span>
+                            </div>
+                        </div>
+                        {/* Chamada principal */}
+                        <p className="text-sm text-slate-700">
+                            Conectamos empresas e profissionais qualificados para trabalhos por período ou turnos específicos
+                        </p>
+
+                        <h1 className="text-3xl font-extrabold">
+                            Conectando <span className="text-emerald-500">empresas</span> &{" "}
+                            <span className="text-emerald-500">profissionais</span>
+                        </h1>
+
+                        {/* Botões principais */}
+                        <div className="space-y-4 my-6">
+                            <p className="text-sm font-medium text-gray-700">Como você quer acessar a plataforma?</p>
+                            <div className="grid grid-cols-2 gap-4">
+                                <Button
+                                    onClick={() => handleAccessPlatform("company")}
+                                    className="h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center space-y-1 group"
+                                >
+                                    <div className="flex items-center space-x-2">
+                                        <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                                        <span className="font-semibold">Encontrar</span>
+                                    </div>
+                                    <span className="text-xs opacity-90">Profissionais</span>
+                                </Button>
+
+                                <Button
+                                    onClick={() => handleAccessPlatform("professional")}
+                                    variant="outline"
+                                    className="h-16 border-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-300 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center space-y-1 group"
+                                >
+                                    <div className="flex items-center space-x-2">
+                                        <Building2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                                        <span className="font-semibold">Encontrar</span>
+                                    </div>
+                                    <span className="text-xs opacity-75">Empresas</span>
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Hero Section */}
+                        <div className="space-y-4">
+                            <div className="inline-flex items-center bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-medium border border-emerald-200">
+                                <Sparkles className="w-4 h-4 mr-2" />
+                                Conecte-se agora mesmo
+                            </div>
+
+                            <h2 className="text-2xl font-bold text-gray-900 leading-tight">
+                                Encontre o <span className="block text-emerald-600">profissional ideal</span>
+                                para seu negócio
+                            </h2>
+
+                            <p className="text-sm text-gray-600 leading-relaxed max-w-sm mx-auto">
+                                Conectamos empresas e profissionais qualificados para trabalhos por período ou turnos específicos
+                            </p>
+                        </div>
+
+                        {/* Features */}
+                        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-emerald-100 shadow-lg mt-4">
+                            <div className="grid grid-cols-3 gap-4 text-center">
+                                <div className="space-y-2">
+                                    <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+                                        <Clock className="w-5 h-5 text-emerald-600" />
+                                    </div>
+                                    <div className="text-xs font-medium text-gray-700">Trabalho por período</div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+                                        <Star className="w-5 h-5 text-emerald-600" />
+                                    </div>
+                                    <div className="text-xs font-medium text-gray-700">Sistema de avaliação</div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+                                        <Users className="w-10 h-10 text-emerald-600" />
+                                    </div>
+                                    <div className="text-xs font-medium text-gray-700">Conexão direta</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    )
 }
