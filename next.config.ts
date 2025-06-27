@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  swcMinify: true,
   reactStrictMode: true,
 
   // Requisito para GitHub Pages funcionar com site estático
