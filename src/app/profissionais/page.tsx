@@ -227,12 +227,11 @@ export default function FreelancerApp() {
       setCalendarStartIndex(calendarStartIndex + 1)
     }
   }
-  const iconMap = {
-    Utensils: <Utensils className="w-4 h-4" />,
-    Wine: <Wine className="w-4 h-4" />,
-    Headphones: <Headphones className="w-4 h-4" />,
+  const iconMap: { [key: string]: React.ElementType } = {
+    Utensils,
+    Wine,
+    Headphones,
   }
-
 
   const canScrollLeft = calendarStartIndex > 0
   const canScrollRight = calendarStartIndex < calendarDays.length - 7
