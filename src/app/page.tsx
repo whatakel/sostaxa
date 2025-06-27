@@ -82,8 +82,8 @@ export default function landing() {
                                         Oportunidades<br />que combinam com você
                                     </p>
                                     <div className="relative z-10 flex flex-col items-center justify-center leading-tight text-center">
-                                        <span className="text-2xl font-extrabold text-white/90">Profissionais</span>
                                         <span className="text-lg font-bold tracking-wide">Encontrar</span>
+                                        <span className="text-2xl font-extrabold text-white/90">Profissionais</span>
                                     </div>
                                 </div>
                             </Link>
