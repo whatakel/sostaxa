@@ -101,7 +101,7 @@ export default function landing() {
                                         <span className="text-2xl font-extrabold text-emerald-700/90">Empresas</span>
                                         <span className="text-lg font-bold tracking-wide">Encontrar</span>
                                     </div>
-                                </div>
+                                </div>Freelancer 
                             </Link>
                         </div>
 

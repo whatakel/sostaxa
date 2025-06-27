@@ -796,7 +796,6 @@ export default function FreelancerApp() {
                     <div
                       className={`absolute -bottom-1 -right-1 w-6 h-6 ${selectedFreelancer.iconColor} rounded-full flex items-center justify-center text-xs border-2 border-white shadow-lg`}
                     >
-                      {selectedFreelancer.profileIcon}
                     </div>
                     {selectedFreelancer.online && (
                       <Button
