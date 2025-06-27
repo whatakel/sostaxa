@@ -31,6 +31,7 @@ import {
   Hourglass,
   ChevronDown,
   Info,
+  Zap,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -49,6 +50,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+
 const freelancers = [
   {
     id: 1,
@@ -70,6 +72,7 @@ const freelancers = [
     distance: "1.2 km",
     shift: ["manhã", "tarde"],
     lastLogin: "Ativo agora",
+    urgent: true,
   },
   {
     id: 2,
@@ -91,6 +94,7 @@ const freelancers = [
     distance: "2.1 km",
     shift: ["tarde", "noite"],
     lastLogin: "20min",
+    urgent: false,
   },
   {
     id: 3,
@@ -111,7 +115,7 @@ const freelancers = [
     userIconVariant: 3,
     distance: "0.5 km",
     shift: ["noite"],
-    lastLogin: "1 dia",
+    urgent: false,
   },
   {
     id: 4,
@@ -133,6 +137,7 @@ const freelancers = [
     distance: "3.6 km",
     shift: ["manhã", "tarde", "noite"],
     lastLogin: "8 dias",
+    urgent: false,
   },
 ]
 
@@ -169,6 +174,7 @@ const getUserIconVariant = (variant: number) => {
 }
 
 export default function FreelancerApp() {
+  const [urgentOnly, setUrgentOnly] = useState(false)
   const [dateSelectionMode, setDateSelectionMode] = useState<"day" | "period">("day")
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [selectedDateRange, setSelectedDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
@@ -232,10 +238,10 @@ export default function FreelancerApp() {
   const canScrollRight = calendarStartIndex < calendarDays.length - 7
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-lg">
-        <div className="max-w-md mx-auto px-4 py-6">
+      <div className="shadow-lg bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+        <div className="max-w-md px-4 py-6 mx-auto">
           <div className="flex items-center justify-between">
             {/* Logo composta */}
             <div className="flex flex-col space-y-1">
@@ -255,95 +261,110 @@ export default function FreelancerApp() {
                 </div>
               </div>
               {/* Slogan abaixo */}
-              <p className="text-sm text-slate-300 ml-1">Colaboração que vira solução.</p>
+              <p className="ml-1 text-sm text-slate-300">Colaboração que vira solução.</p>
             </div>
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center border-2 border-white/20 shadow-lg">
-              <User className="h-5 w-5 text-white" />
+            <div className="flex items-center justify-center w-10 h-10 border-2 rounded-full shadow-lg bg-gradient-to-br from-blue-600 to-blue-800 border-white/20">
+              <User className="w-5 h-5 text-white" />
             </div>
           </div>
         </div>
         {/* Linha separadora (se quiser manter em emerald) */}
-        <div className="h-1 bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-500"></div>
+
       </div>
 
       {/* Main Container - Full Height */}
       <div className="flex-1 bg-white min-h-0 leading-[1em]">
-        <div className="max-w-md mx-auto px-4 py-6 h-full flex flex-col">
+        <div className="flex flex-col h-full max-w-md px-4 py-6 mx-auto">
+          {/* Urgent Jobs Filter */}
+          <div className="p-4 mb-6 border border-gray-200 rounded-lg">
+            <div className="flex items-center space-x-3">
+              <Checkbox
+                id="urgent"
+                checked={urgentOnly}
+                onCheckedChange={(checked) => setUrgentOnly(!!checked)}
+                className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+              />
+              <label htmlFor="urgent" className="flex items-center space-x-2 text-sm font-medium cursor-pointer">
+                <Zap className="w-4 h-4 text-red-500" />
+                <span>Apenas vagas com urgência para hoje</span>
+              </label>
+            </div>
+          </div>
           {/* Location Search */}
-          <div className="mb-3 border border-gray-200 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Localização</h3>
+          <div className="p-4 mb-3 border border-gray-200 rounded-lg">
+            <h3 className="mb-3 text-sm font-semibold text-gray-700">Localização</h3>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
               <Input
                 placeholder="Digite sua cidade ou região"
                 value={searchLocation}
                 onChange={(e) => setSearchLocation(e.target.value)}
-                className="pl-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                className="h-12 pl-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
             <Button variant="outline" className="w-full h-10 mt-2 border-gray-200 hover:bg-gray-50">
-              <MapPin className="mr-2 h-4 w-4 text-blue-600" />
+              <MapPin className="w-4 h-4 mr-2 text-blue-600" />
               Usar minha localização atual
             </Button>
           </div>
 
 
           {/* Date Selection Tabs */}
-          <div className="mb-3 border border-gray-200 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Selecione por dia ou período</h3>
+          <div className="p-4 mb-3 border border-gray-200 rounded-lg">
+            <h3 className="mb-3 text-sm font-semibold text-gray-700">Selecione por dia ou período</h3>
             <Tabs value={dateSelectionMode} onValueChange={(value) => setDateSelectionMode(value as "day" | "period")}>
               <TabsList className="grid w-full grid-cols-2 mb-4">
                 <TabsTrigger value="day" className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
+                  <Calendar className="w-4 h-4" />
                   Por dia
                 </TabsTrigger>
                 <TabsTrigger value="period" className="flex items-center gap-2">
-                  <CalendarDays className="h-4 w-4" />
+                  <CalendarDays className="w-4 h-4" />
                   Por período
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="day" className="mt-0">
-                <div className="relative w-full rounded-md overflow-hidden">
+                <div className="relative w-full overflow-hidden rounded-md">
                   {/* Setas mais nas extremidades */}
-                  <div className="absolute inset-y-0 -left-2 z-20 flex items-center pointer-events-none">
-                    <div className="w-8 h-full flex items-center justify-center pointer-events-auto">
+                  <div className="absolute inset-y-0 z-20 flex items-center pointer-events-none -left-2">
+                    <div className="flex items-center justify-center w-8 h-full pointer-events-auto">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => scrollCalendar("left")}
                         disabled={!canScrollLeft}
-                        className="p-1 h-full w-8 bg-transparent hover:bg-transparent focus-visible:ring-0 focus:outline-none"
+                        className="w-8 h-full p-1 bg-transparent hover:bg-transparent focus-visible:ring-0 focus:outline-none"
                       >
-                        <ChevronLeft className="h-4 w-4 text-gray-400" />
+                        <ChevronLeft className="w-4 h-4 text-gray-400" />
                       </Button>
                     </div>
                   </div>
-                  <div className="absolute inset-y-0 -right-2 z-20 flex items-center pointer-events-none">
-                    <div className="w-8 h-full flex items-center justify-center pointer-events-auto">
+                  <div className="absolute inset-y-0 z-20 flex items-center pointer-events-none -right-2">
+                    <div className="flex items-center justify-center w-8 h-full pointer-events-auto">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => scrollCalendar("right")}
                         disabled={!canScrollRight}
-                        className="p-1 h-full w-8 bg-transparent hover:bg-transparent focus-visible:ring-0 focus:outline-none"
+                        className="w-8 h-full p-1 bg-transparent hover:bg-transparent focus-visible:ring-0 focus:outline-none"
                       >
-                        <ChevronRight className="h-4 w-4 text-gray-400" />
+                        <ChevronRight className="w-4 h-4 text-gray-400" />
                       </Button>
                     </div>
                   </div>
 
                   {/* Gradientes laterais mais largos */}
                   {canScrollLeft && (
-                    <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-black/20 to-transparent z-10 pointer-events-none rounded-l-md" />
+                    <div className="absolute top-0 bottom-0 left-0 z-10 w-6 pointer-events-none bg-gradient-to-r from-black/20 to-transparent rounded-l-md" />
                   )}
                   {canScrollRight && (
-                    <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black/20 to-transparent z-10 pointer-events-none rounded-r-md" />
+                    <div className="absolute top-0 bottom-0 right-0 z-10 w-6 pointer-events-none bg-gradient-to-l from-black/20 to-transparent rounded-r-md" />
                   )}
 
                   {/* Dias visíveis */}
                   <div className="relative overflow-hidden">
-                    <div className="flex space-x-2 w-full">
+                    <div className="flex w-full space-x-2">
                       {visibleDays.map((day) => (
                         <Button
                           key={`${day.date}-${day.month}`}
@@ -367,7 +388,6 @@ export default function FreelancerApp() {
                             {new Intl.DateTimeFormat('pt-BR', { month: 'short' }).format(new Date(day.fullDate))}
                           </span>
                           <span className="text-[10px] text-muted-foreground font-semibold leading-none">
-                            {day.monthShort}
                           </span>
                           <span className="text-xs font-medium leading-none">{day.dayName}</span>
                           <span className="text-lg font-bold leading-tight">{day.date}</span>
@@ -380,13 +400,20 @@ export default function FreelancerApp() {
 
               {/* Time Range Selection */}
               <TabsContent value="period" className="mt-0">
-                <div className="w-full bg-gray-50 border rounded-lg p-4">
-                  <div className="w-full flex justify-center">
+                <div className="w-full p-4 border rounded-lg bg-gray-50">
+                  <div className="flex justify-center w-full">
                     <CalendarComponent
                       mode="range"
                       selected={selectedDateRange}
-                      onSelect={setSelectedDateRange}
-                      className="rounded-md w-full max-w-none"
+                      onSelect={(range) => {
+                        if (range) {
+                          setSelectedDateRange({ from: range.from, to: range.to })
+                        } else {
+                          setSelectedDateRange({ from: undefined, to: undefined })
+                        }
+                      }}
+                      className="w-full rounded-md max-w-none [&_table]:w-full"
+
                       numberOfMonths={1}
                       classNames={{
                         months: "w-full",
@@ -398,7 +425,7 @@ export default function FreelancerApp() {
                     />
                   </div>
                   {selectedDateRange.from && selectedDateRange.to && (
-                    <div className="mt-3 p-2 bg-blue-50 rounded text-sm text-blue-700">
+                    <div className="p-2 mt-3 text-sm text-blue-700 rounded bg-blue-50">
                       Período selecionado: {selectedDateRange.from.toLocaleDateString("pt-BR")} até{" "}
                       {selectedDateRange.to.toLocaleDateString("pt-BR")}
                     </div>
@@ -414,13 +441,13 @@ export default function FreelancerApp() {
 
               {/* Aba: Horário */}
               <TabsContent value="hour">
-                <div className="w-full bg-gray-50 border border-gray-200 rounded-lg p-2">
+                <div className="w-full p-2 border border-gray-200 rounded-lg bg-gray-50">
                   <div className="grid grid-cols-2 gap-3">
                     <Select
                       value={timeRange.start}
                       onValueChange={(value) => setTimeRange({ ...timeRange, start: value })}
                     >
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className="w-full h-10">
                         <SelectValue placeholder="Início" />
                       </SelectTrigger>
                       <SelectContent>
@@ -438,7 +465,7 @@ export default function FreelancerApp() {
                       value={timeRange.end}
                       onValueChange={(value) => setTimeRange({ ...timeRange, end: value })}
                     >
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className="w-full h-10">
                         <SelectValue placeholder="Fim" />
                       </SelectTrigger>
                       <SelectContent>
@@ -457,9 +484,9 @@ export default function FreelancerApp() {
 
               {/* Aba: Período */}
               <TabsContent value="period">
-                <div className="w-full bg-gray-50 border border-gray-200 rounded-lg p-2">
+                <div className="w-full p-2 border border-gray-200 rounded-lg bg-gray-50">
                   <Select value={period} onValueChange={setPeriod}>
-                    <SelectTrigger className="h-10 w-full">
+                    <SelectTrigger className="w-full h-10">
                       <SelectValue placeholder="Selecione o turno" />
                     </SelectTrigger>
                     <SelectContent>
@@ -475,45 +502,17 @@ export default function FreelancerApp() {
           </div>
 
           {/* btn buscar  */}
-
-          <div className="flex justify-center mt-8">
-            <div className="inline-flex group relative bg-emerald-300/80 
-            hover:bg-gray-900/80 hover:border hover:border-gray-400 
-            px-2 py-2 rounded-md items-center gap-[7px] shadow-lg 
-            backdrop-blur-sm cursor-pointer transition-all duration-300">
-
-              {/* Parte 1: SOS */}
-              <div className=" flex justify-center
-              items-center gap-1
-              relative bg-gray-900 text-white 
-              text-lg font-bold px-4 py-2 
-              rounded-sm transition-transform 
-              duration-300 group-hover:scale-1.05
-            group-hover:bg-gray-900 group-hover:text-gray-300
-              cursor-pointer overflow-hidden">
-
-                {/* SOS  */}
-                <div>S</div>
-                <span className="inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-gray-900 bg-emerald-400 rounded-full">
-                  !</span>
-                <div>S</div>
-                {/* Brilho branco com overlay */}
-                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-sm" />
-              </div>
-
-              {/* Parte 2: Botão */}
-              <button
-                className="flex items-center bg-gray-100 text-gray-700 text-lg border-gray-900 
-                font-semibold px-4 py-2 rounded-sm transition-colors duration-300
-                 group-hover:bg-emerald-300/80 group-hover:text-gray-200 cursor-pointer"
-              >
-                <Search className="mr-3 h-6 w-6" />
-                Buscar profissionais
-              </button>
-            </div>
+          <div className="mt-auto">
+            <Button
+              onClick={handleSearch}
+              className="w-full text-lg font-semibold shadow-lg h-14 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+            >
+              <Search className="w-6 h-6 mr-3" />
+              Buscar Empresas
+            </Button>
           </div>
 
-          <span className="mt-5 relative z-10 flex items-center justify-center">
+          <span className="relative z-10 flex items-center justify-center mt-5">
 
             Sua solução a um clique dedistância
           </span>
@@ -525,7 +524,7 @@ export default function FreelancerApp() {
         hasSearched && (
           <>
             {/* Filters and Results Header */}
-            <div className="bg-gray-50 border-b px-4 py-4 shadow-sm">
+            <div className="px-4 py-4 border-b shadow-sm bg-gray-50">
               <div className="max-w-md mx-auto">
                 <div className="flex items-center justify-between mb-3">
                   <Dialog open={filtersOpen} onOpenChange={setFiltersOpen}>
@@ -533,9 +532,9 @@ export default function FreelancerApp() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow"
+                        className="transition-shadow bg-white border-gray-200 shadow-sm hover:shadow-md"
                       >
-                        <Filter className="mr-2 h-4 w-4" />
+                        <Filter className="w-4 h-4 mr-2" />
                         Filtros Avançados
                       </Button>
                     </DialogTrigger>
@@ -543,8 +542,8 @@ export default function FreelancerApp() {
                       <DialogHeader className="pb-4 border-b">
                         <DialogTitle className="flex items-center justify-between text-xl">
                           <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                              <Filter className="h-4 w-4 text-white" />
+                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
+                              <Filter className="w-4 h-4 text-white" />
                             </div>
                             <span>Filtros Avançados</span>
                           </div>
@@ -555,16 +554,16 @@ export default function FreelancerApp() {
                         {/* Service Type */}
                         <div className="space-y-4">
                           <div className="flex items-center space-x-2">
-                            <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-md flex items-center justify-center">
-                              <span className="text-white text-xs">🏷️</span>
+                            <div className="flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-orange-400 to-red-500">
+                              <span className="text-xs text-white">🏷️</span>
                             </div>
-                            <h3 className="font-semibold text-lg">Tipo de Serviço</h3>
+                            <h3 className="text-lg font-semibold">Tipo de Serviço</h3>
                           </div>
                           <div className="grid grid-cols-2 gap-3">
                             {serviceTypes.map((service) => (
                               <div
                                 key={service}
-                                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                                className="flex items-center p-3 space-x-3 transition-colors rounded-lg hover:bg-gray-50"
                               >
                                 <Checkbox
                                   id={service}
@@ -591,12 +590,12 @@ export default function FreelancerApp() {
                         {/* Price Range */}
                         <div className="space-y-4">
                           <div className="flex items-center space-x-2">
-                            <div className="w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-500 rounded-md flex items-center justify-center">
-                              <span className="text-white text-xs">💰</span>
+                            <div className="flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-green-400 to-emerald-500">
+                              <span className="text-xs text-white">💰</span>
                             </div>
-                            <h3 className="font-semibold text-lg">Faixa de Preço</h3>
+                            <h3 className="text-lg font-semibold">Faixa de Preço</h3>
                           </div>
-                          <div className="px-4 py-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+                          <div className="px-4 py-6 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50">
                             <Slider
                               value={priceRange}
                               onValueChange={setPriceRange}
@@ -605,9 +604,9 @@ export default function FreelancerApp() {
                               step={5}
                               className="w-full"
                             />
-                            <div className="flex justify-between text-sm font-medium text-gray-700 mt-4">
-                              <span className="bg-white px-3 py-1 rounded-full shadow-sm">R$ {priceRange[0]}</span>
-                              <span className="bg-white px-3 py-1 rounded-full shadow-sm">R$ {priceRange[1]}</span>
+                            <div className="flex justify-between mt-4 text-sm font-medium text-gray-700">
+                              <span className="px-3 py-1 bg-white rounded-full shadow-sm">R$ {priceRange[0]}</span>
+                              <span className="px-3 py-1 bg-white rounded-full shadow-sm">R$ {priceRange[1]}</span>
                             </div>
                           </div>
                         </div>
@@ -624,16 +623,16 @@ export default function FreelancerApp() {
                     </DialogContent>
                   </Dialog>
 
-                  <div className="text-sm text-gray-600 font-medium">{filteredFreelancers.length} profissionais</div>
+                  <div className="text-sm font-medium text-gray-600">{filteredFreelancers.length} profissionais</div>
                 </div>
 
                 {/* Online Users Indicator */}
                 {onlineCount > 0 && (
-                  <div className="bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 border-2 border-green-200 rounded-xl p-4 mb-4 shadow-sm">
+                  <div className="p-4 mb-4 border-2 border-green-200 shadow-sm bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 rounded-xl">
                     <div className="flex items-center justify-center space-x-3">
                       <div className="flex items-center space-x-2">
-                        <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
-                        <Users className="h-5 w-5 text-green-600" />
+                        <div className="w-4 h-4 bg-green-500 rounded-full shadow-lg animate-pulse"></div>
+                        <Users className="w-5 h-5 text-green-600" />
                         <span className="text-sm font-bold text-green-700">{onlineCount} profissionais online agora</span>
                       </div>
                     </div>
@@ -643,7 +642,7 @@ export default function FreelancerApp() {
             </div>
 
             {/* Freelancers List */}
-            <div className="max-w-md mx-auto px-4 py-4 space-y-4">
+            <div className="max-w-md px-4 py-4 mx-auto space-y-4">
               {filteredFreelancers.map((freelancer) => {
                 const userIconStyle = getUserIconVariant(freelancer.userIconVariant)
                 const Icon = iconMap[freelancer.profileIconComponent]
@@ -656,9 +655,15 @@ export default function FreelancerApp() {
                         ? "border-emerald-400 hover:border-emerald-500 "
                         : "border-gray-300 hover:border-gray-500/50"
                       }`}>
+                    {freelancer.urgent && (
+                      <div className="absolute top-2 right-2 z-20 rounded-full bg-red-600 px-3 py-[6px] text-xs font-bold text-white shadow-lg flex items-center gap-1 animate-pulse">
+                        <Zap className="w-4 h-4 text-white" />
+                        URGENTE
+                      </div>
+                    )}
                     <CardContent className="p-4">
                       <div className="flex items-stretch space-x-4">
-                        <div className="relative flex flex-col justify-center items-center">
+                        <div className="relative flex flex-col items-center justify-center">
                           <div className="relative">
                             <div className="flex flex-col items-center">
                               {/* Avatar com borda dinâmica */}
@@ -677,12 +682,12 @@ export default function FreelancerApp() {
                               {/* Status Badge */}
                               <span className="text-xs">Último acesso:</span>
                               {freelancer.lastLogin === "Ativo agora" ? (
-                                <div className="flex items-center shadow-sm mt-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full px-2 border border-emerald-300">
-                                  <div className="w-2 h-2 bg-emerald-800 rounded-full animate-pulse mr-1" />
+                                <div className="flex items-center px-2 mt-1 text-xs font-bold border rounded-full shadow-sm bg-emerald-100 text-emerald-800 border-emerald-300">
+                                  <div className="w-2 h-2 mr-1 rounded-full bg-emerald-800 animate-pulse" />
                                   Online
                                 </div>
                               ) : (
-                                <div className="flex items-center shadow-sm mt-1 bg-blue-100 text-blue-600 text-xs font-bold rounded-full px-2 border border-blue-100">
+                                <div className="flex items-center px-2 mt-1 text-xs font-bold text-blue-600 bg-blue-100 border border-blue-100 rounded-full shadow-sm">
                                   <Hourglass className="w-3 h-3 mr-1 text-blue-600" />
                                   {freelancer.lastLogin}
                                 </div>
@@ -696,21 +701,21 @@ export default function FreelancerApp() {
                           <div className="flex flex-col justify-between h-full">
                             <div className="flex justify-between">
                               <div>
-                                <h3 className="font-bold text-gray-500 truncate text-lg leading-none">
+                                <h3 className="text-lg font-bold leading-none text-gray-500 truncate">
                                   {freelancer.name}
                                 </h3>
                                 <div className="flex items-center gap-2 mt-0.5">
                                   <div className="text-muted-foreground">
                                     {Icon}
                                   </div>
-                                  <p className="text-sm text-gray-600 font-semibold">
+                                  <p className="text-sm font-semibold text-gray-600">
                                     {freelancer.role}
                                   </p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
                                   {/* Badge de avaliação */}
                                   <div className="flex items-center gap-1 text-xs font-semibold text-gray-700 border border-gray-200 bg-gray-100 px-2 py-0.5 rounded-full shadow-sm">
-                                    <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+                                    <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
                                     <span>{freelancer.rating}</span>
                                   </div>
 
@@ -734,34 +739,21 @@ export default function FreelancerApp() {
 
                               </div>
                               {/* Price at top */}
-                              <span className="text-base text-muted-foreground font-bold text-right block leading-tight">
-                                <span className="text-emerald-500 leading-none">{freelancer.price}</span>
+                              <span className="block text-base font-bold leading-tight text-right text-muted-foreground">
+                                <span className="leading-none text-emerald-500">{freelancer.price}</span>
                                 <br />
-                                <span className="text-sm font-light text-muted-foreground leading-none">Hora</span>
+                                <span className="text-sm font-light leading-none text-muted-foreground">Hora</span>
                               </span>
                             </div>
 
-                            <Separator className="my-2 h-px bg-gray-200" />
+                            <Separator className="h-px my-2 bg-gray-200" />
                             <div className="flex items-center justify-between w-full">
 
                               {/* Botão expandir perfil*/}
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="
-                                bg-gray-100 py-1 text-sm font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset w-full
-                                transition-all duration-300 ease-in-out
-
-                                hover:bg-gray-600
-                                hover:text-white 
-                                hover:ring-gray-300/40
-                                hover:shadow-sm
-
-                                group-hover:bg-gray-700
-                                group-hover:text-white 
-                                group-hover:ring-gray-300/40
-                                group-hover:shadow-sm
-                            ">
+                                className="w-full py-1 text-sm font-medium text-gray-600 transition-all duration-300 ease-in-out bg-gray-100 ring-1 ring-gray-500/10 ring-inset hover:bg-gray-600 hover:text-white hover:ring-gray-300/40 hover:shadow-sm group-hover:bg-gray-700 group-hover:text-white group-hover:ring-gray-300/40 group-hover:shadow-sm">
                                 Mais Detalhes
 
                                 {/* Ícone central */}
@@ -788,7 +780,7 @@ export default function FreelancerApp() {
           {selectedFreelancer && (
             <>
               <DialogHeader>
-                <DialogTitle className="flex items-center justify-between text-xl font-semibold text-gray-800 tracking-tight">
+                <DialogTitle className="flex items-center justify-between text-xl font-semibold tracking-tight text-gray-800">
                   <span className="truncate max-w-[85%]">{selectedFreelancer.name}</span>
                 </DialogTitle>
               </DialogHeader>
@@ -815,7 +807,7 @@ export default function FreelancerApp() {
                           e.stopPropagation()
                           toggleSaved(selectedFreelancer.id)
                         }}
-                        className="absolute -top-1 -left-1 p-1 h-7 w-7 bg-white shadow-lg rounded-full border-2 border-gray-100 hover:shadow-xl transition-shadow"
+                        className="absolute p-1 transition-shadow bg-white border-2 border-gray-100 rounded-full shadow-lg -top-1 -left-1 h-7 w-7 hover:shadow-xl"
                       >
                         <Bookmark
                           className={`h-4 w-4 ${savedFreelancers.includes(selectedFreelancer.id)
@@ -828,20 +820,20 @@ export default function FreelancerApp() {
                   </div>
 
                   <div className="flex-1">
-                    <p className="text-blue-600 font-medium">{selectedFreelancer.role}</p>
-                    <div className="flex items-center space-x-4 mt-2">
+                    <p className="font-medium text-blue-600">{selectedFreelancer.role}</p>
+                    <div className="flex items-center mt-2 space-x-4">
                       <div className="flex items-center">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-medium ml-1">{selectedFreelancer.rating}</span>
+                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                        <span className="ml-1 text-sm font-medium">{selectedFreelancer.rating}</span>
                       </div>
                       <span className="font-semibold text-blue-600">{selectedFreelancer.price}</span>
                     </div>
                     {selectedFreelancer.online ? (
-                      <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs mt-2">
+                      <Badge variant="secondary" className="mt-2 text-xs text-green-800 bg-green-100">
                         Online
                       </Badge>
                     ) : (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs mt-2">
+                      <Badge variant="secondary" className="mt-2 text-xs text-gray-700 bg-gray-100">
                         <Clock className="w-3 h-3 mr-1" />
                         {selectedFreelancer.availability}
                       </Badge>
@@ -850,38 +842,38 @@ export default function FreelancerApp() {
                 </div>
 
                 {/* Stats */}
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6 border border-gray-100">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full -translate-y-16 translate-x-16"></div>
+                <div className="relative p-6 overflow-hidden border border-gray-100 rounded-2xl bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+                  <div className="absolute top-0 right-0 w-32 h-32 translate-x-16 -translate-y-16 rounded-full bg-gradient-to-br from-blue-200/20 to-purple-200/20"></div>
                   <div className="relative grid grid-cols-3 gap-6">
                     <div className="text-center">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-2 shadow-lg">
-                        <CheckCircle className="h-6 w-6 text-white" />
+                      <div className="flex items-center justify-center w-12 h-12 mx-auto mb-2 shadow-lg bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl">
+                        <CheckCircle className="w-6 h-6 text-white" />
                       </div>
-                      <div className="text-2xl font-bold text-slate-800 mb-1">{selectedFreelancer.completedJobs}</div>
-                      <div className="text-xs text-slate-600 font-medium">Trabalhos</div>
+                      <div className="mb-1 text-2xl font-bold text-slate-800">{selectedFreelancer.completedJobs}</div>
+                      <div className="text-xs font-medium text-slate-600">Trabalhos</div>
                     </div>
                     <div className="text-center">
-                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-2 shadow-lg">
-                        <Clock className="h-6 w-6 text-white" />
+                      <div className="flex items-center justify-center w-12 h-12 mx-auto mb-2 shadow-lg bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl">
+                        <Clock className="w-6 h-6 text-white" />
                       </div>
-                      <div className="text-2xl font-bold text-slate-800 mb-1">{selectedFreelancer.responseTime}</div>
-                      <div className="text-xs text-slate-600 font-medium">Resposta</div>
+                      <div className="mb-1 text-2xl font-bold text-slate-800">{selectedFreelancer.responseTime}</div>
+                      <div className="text-xs font-medium text-slate-600">Resposta</div>
                     </div>
                     <div className="text-center">
-                      <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center mx-auto mb-2 shadow-lg">
-                        <span className="text-white text-lg">☀️</span>
+                      <div className="flex items-center justify-center w-12 h-12 mx-auto mb-2 shadow-lg bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl">
+                        <span className="text-lg text-white">☀️</span>
                       </div>
-                      <div className="text-2xl font-bold text-slate-800 mb-1">Manhã</div>
-                      <div className="text-xs text-slate-600 font-medium">Turno ativo</div>
+                      <div className="mb-1 text-2xl font-bold text-slate-800">Manhã</div>
+                      <div className="text-xs font-medium text-slate-600">Turno ativo</div>
                     </div>
                   </div>
                 </div>
 
                 <Button
                   variant="outline"
-                  className="w-full h-12 border-2 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 font-semibold"
+                  className="w-full h-12 font-semibold text-blue-700 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300"
                 >
-                  <User className="mr-2 h-5 w-5" />
+                  <User className="w-5 h-5 mr-2" />
                   Ver Perfil Completo
                 </Button>
 
@@ -898,8 +890,8 @@ export default function FreelancerApp() {
                     disabled={!selectedFreelancer.online}
                   >
                     <div className="flex items-center">
-                      {selectedFreelancer.online && <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>}
-                      <Phone className="mr-2 h-4 w-4" />
+                      {selectedFreelancer.online && <div className="w-2 h-2 mr-2 bg-green-400 rounded-full"></div>}
+                      <Phone className="w-4 h-4 mr-2" />
                       Chamar agora
                     </div>
                   </Button>
@@ -908,7 +900,7 @@ export default function FreelancerApp() {
                     variant="outline"
                     className="h-12 border-gray-200 hover:bg-gray-50"
                   >
-                    <MessageCircle className="mr-2 h-4 w-4" />
+                    <MessageCircle className="w-4 h-4 mr-2" />
                     Iniciar Chat
                   </Button>
                 </div>

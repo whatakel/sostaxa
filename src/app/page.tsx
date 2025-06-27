@@ -1,7 +1,10 @@
 "use client"
 
+import Link from "next/link"
+import Marquee from "react-fast-marquee";
 import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
+
 import {
     Briefcase,
     Users,
@@ -11,118 +14,97 @@ import {
     Building2,
     Sparkles,
     Clock,
+    User,
+    Landmark,
 } from "lucide-react"
-
-
-
+const chamadas = [
+    { texto: "Para emergências", bg: "bg-red-100 text-red-800" },
+    { texto: "Oportunidades em tempo real", bg: "bg-yellow-100 text-yellow-800" },
+    { texto: "Profissionais disponíveis por turno", bg: "bg-blue-100 text-blue-800" },
+];
 export default function landing() {
 
     return (
-        <main className="relative h-[100dvh] w-[100vw] overflow-hidden text-white">
-            {/* Camada branca translúcida SEM apagar o fundo */}
-            <div className="absolute inset-0 z-10 bg-black/10 pointer-events-none" />
+        <main className="relative flex flex-col h-[100dvh] w-[100vw] overflow-hidden text-white">
+            {/* Bloco SOS com gradiente e sombra simulando borda */}
+            <div className="flex justify-center w-full py-5 shadow-lg bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+                <div
+                    className="flex items-center px-4 skew-x-[-12deg] rounded-l-md bg-gradient-to-br from-emerald-400 to-emerald-200 shadow-[0_0_0_1.5px_#34D399] border-r-0">
+                    <span className="text-white font-bold text-[2rem] skew-x-[12deg]">S</span>
+                    <MessageCircleWarning className="w-8 h-8 text-white skew-x-[12deg]" strokeWidth={2.5} />
+                    <span className="text-white font-bold text-[2rem] skew-x-[12deg]">S</span>
+                </div>
+
+                {/* Bloco taxas com fundo sólido e mesma sombra lateral */}
+                <div
+                    className="flex items-center bg-gray-900 px-4 skew-x-[-12deg] rounded-r-md shadow-[0_0_0_1.5px_#34D399] border-l-0">
+                    <span className="text-white font-bold text-2xl skew-x-[12deg] leading-6">TAXAS</span>
+                </div>
+            </div>
+            <div className="absolute inset-0 z-10 pointer-events-none bg-black/10" />
+            <div className="w-full h-1 bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-500"></div>
 
             {/* Conteúdo central */}
-            <div className="relative z-10 h-full w-full flex items-center justify-center px-4">
-                <div className="relative z-10 h-full w-full flex items-center justify-center px-4 py-12">
+            <div className="relative z-10 flex items-center justify-center w-full h-full px-4">
+                <div className="relative z-10 flex items-center justify-center w-full px-4 ">
                     {/* Container principal */}
-                    <div className="backdrop-blur-xl bg-white/90 border border-white/40 shadow-xl rounded-2xl p-8 max-w-md w-full text-center space-y-8 text-gray-900">
-                        <div className="inline-flex self-start shadow-lg">
-                            {/* Bloco SOS com gradiente e sombra simulando borda */}
-                            <div
-                                className="flex items-center px-4 skew-x-[-12deg] rounded-l-md bg-gradient-to-br from-emerald-400 to-emerald-200 shadow-[0_0_0_1.5px_#34D399] border-r-0">
-                                <span className="text-white font-bold text-2xl skew-x-[12deg]">S</span>
-                                <MessageCircleWarning className="w-6 h-6 text-white skew-x-[12deg]" strokeWidth={2.5} />
-                                <span className="text-white font-bold text-2xl skew-x-[12deg]">S</span>
-                            </div>
+                    <div className="w-full max-w-md p-8 space-y-8 text-center text-gray-900 border shadow-xl backdrop-blur-xl bg-white/90 border-white/40 rounded-2xl">
 
-                            {/* Bloco taxas com fundo sólido e mesma sombra lateral */}
-                            <div
-                                className="flex items-center bg-gray-900 px-4 skew-x-[-12deg] rounded-r-md shadow-[0_0_0_1.5px_#34D399] border-l-0">
-                                <span className="text-white font-bold text-2xl skew-x-[12deg] leading-6">TAXAS</span>
-                            </div>
-                        </div>
                         {/* Chamada principal */}
-                        <p className="text-sm text-slate-700">
-                            Conectamos empresas e profissionais qualificados para trabalhos por período ou turnos específicos
-                        </p>
-
-                        <h1 className="text-3xl font-extrabold">
-                            Conectando <span className="text-emerald-500">empresas</span> &{" "}
-                            <span className="text-emerald-500">profissionais</span>
+                        <h1 className="flex flex-col mb-0 text-3xl font-extrabold leading-snug text-center text-gray-500 uppercase">
+                            Conectando oportunidades
                         </h1>
+                        <p className="font-bold uppercase text-md text-emerald-500">
+                            no momento em que você mais precisa.
+                        </p>
+                        <div className="-mx-8 overflow-hidden border border-emerald-200 bg-emerald-100 ">
 
-                        {/* Botões principais */}
-                        <div className="space-y-4 my-6">
-                            <p className="text-sm font-medium text-gray-700">Como você quer acessar a plataforma?</p>
-                            <div className="grid grid-cols-2 gap-4">
-                                <Button
-                                    onClick={() => handleAccessPlatform("company")}
-                                    className="h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center space-y-1 group"
-                                >
-                                    <div className="flex items-center space-x-2">
-                                        <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                                        <span className="font-semibold">Encontrar</span>
+                            <Marquee speed={40} gradient={false} pauseOnHover className="py-2">
+                                {chamadas.map((item, i) => (
+                                    <div
+                                        key={i}
+                                        className={`inline-flex items-center px-4 py-1 mx-2 text-sm font-medium border rounded-full border-white shadow-sm animate-pulse ${item.bg}`}
+                                    >
+                                        <div className="w-2.5 h-2.5 mr-2 rounded-full bg-current shadow" />
+                                        {item.texto}
                                     </div>
-                                    <span className="text-xs opacity-90">Profissionais</span>
-                                </Button>
+                                ))}
+                            </Marquee>
+                        </div>
+                        <div className="grid max-w-4xl grid-cols-1 gap-4 mx-auto mt-6 md:grid-cols-2">
+                            {/* Profissionais */}
+                            <Link href="/profissionais" className="group cursor-pointer transition-transform hover:scale-[1.015]">
+                                <div className="relative flex flex-col items-center justify-center w-full h-full p-4 space-y-3 overflow-hidden text-white transition-all duration-300 ease-in-out shadow-md rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 hover:shadow-xl hover:ring-2 hover:ring-white/30 hover:ring-offset-1">
+                                    <div className="absolute left-[-50px] top-0 h-full opacity-20 pointer-events-none flex items-center">
+                                        <User className="w-auto h-full text-white" />
+                                    </div>
+                                    <p className="text-sm font-medium leading-tight text-center text-white/80">
+                                        Oportunidades<br />que combinam com você
+                                    </p>
+                                    <div className="relative z-10 flex flex-col items-center justify-center leading-tight text-center">
+                                        <span className="text-2xl font-extrabold text-white/90">Profissionais</span>
+                                        <span className="text-lg font-bold tracking-wide">Encontrar</span>
+                                    </div>
+                                </div>
+                            </Link>
 
-                                <Button
-                                    onClick={() => handleAccessPlatform("professional")}
-                                    variant="outline"
-                                    className="h-16 border-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-300 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center space-y-1 group"
-                                >
-                                    <div className="flex items-center space-x-2">
-                                        <Building2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                                        <span className="font-semibold">Encontrar</span>
+                            {/* Empresas */}
+                            <Link href="/empresa" className="group cursor-pointer transition-transform hover:scale-[1.015]">
+                                <div className="relative flex flex-col items-center justify-center w-full h-full p-4 space-y-3 overflow-hidden transition-all duration-300 ease-in-out bg-white border-2 shadow-md rounded-xl border-emerald-200 hover:border-emerald-300 hover:bg-emerald-50 text-emerald-700 hover:shadow-xl hover:ring-2 hover:ring-emerald-100 hover:ring-offset-1">
+                                    <div className="absolute left-[-50px] top-0 h-full opacity-10 pointer-events-none flex items-center">
+                                        <Landmark className="w-auto h-full text-emerald-700" />
                                     </div>
-                                    <span className="text-xs opacity-75">Empresas</span>
-                                </Button>
-                            </div>
+                                    <p className="text-sm font-medium leading-tight text-center text-emerald-700/80">
+                                        Encontre talentos prontos<br />para sua necessidade
+                                    </p>
+                                    <div className="relative z-10 flex flex-col items-center justify-center leading-tight text-center">
+                                        <span className="text-2xl font-extrabold text-emerald-700/90">Empresas</span>
+                                        <span className="text-lg font-bold tracking-wide">Encontrar</span>
+                                    </div>
+                                </div>
+                            </Link>
                         </div>
 
-                        {/* Hero Section */}
-                        <div className="space-y-4">
-                            <div className="inline-flex items-center bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-medium border border-emerald-200">
-                                <Sparkles className="w-4 h-4 mr-2" />
-                                Conecte-se agora mesmo
-                            </div>
-
-                            <h2 className="text-2xl font-bold text-gray-900 leading-tight">
-                                Encontre o <span className="block text-emerald-600">profissional ideal</span>
-                                para seu negócio
-                            </h2>
-
-                            <p className="text-sm text-gray-600 leading-relaxed max-w-sm mx-auto">
-                                Conectamos empresas e profissionais qualificados para trabalhos por período ou turnos específicos
-                            </p>
-                        </div>
-
-                        {/* Features */}
-                        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-emerald-100 shadow-lg mt-4">
-                            <div className="grid grid-cols-3 gap-4 text-center">
-                                <div className="space-y-2">
-                                    <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
-                                        <Clock className="w-5 h-5 text-emerald-600" />
-                                    </div>
-                                    <div className="text-xs font-medium text-gray-700">Trabalho por período</div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
-                                        <Star className="w-5 h-5 text-emerald-600" />
-                                    </div>
-                                    <div className="text-xs font-medium text-gray-700">Sistema de avaliação</div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
-                                        <Users className="w-10 h-10 text-emerald-600" />
-                                    </div>
-                                    <div className="text-xs font-medium text-gray-700">Conexão direta</div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
