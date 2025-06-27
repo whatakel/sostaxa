@@ -1,9 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  reactStrictMode: true,
-
-  // Requisito para GitHub Pages funcionar com site estático
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   output: 'export',
   basePath: '/sostaxa',
   trailingSlash: true,
